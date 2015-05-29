@@ -82,14 +82,57 @@
     /////////////////////////////////////////
     
     //service ID=2
+    //sample url http://localhost:8888/q-cigarettes.php?service=2&sid=2&rid=0&date=2018-05-29&time=10:01:00&message=testmessage
     if($_GET['service']==2){
+        $user = 'root';
+        $password = 'root';
+        $db = 'Q-cigarettes';
+        $host = 'localhost';
+        $port = 3306;
         
-        echo "222";
+        $link = mysqli_init();
+        $success = mysqli_real_connect(
+                                       $link,
+                                       $host,
+                                       $user,
+                                       $password,
+                                       $db,
+                                       $port
+                                       );
+        //INSERT INTO `CustomMessage`(`sender_id`, `receiver_id`, `message`, `time`) VALUES (2,0,"testmessage",'2015-05-29 20:01:00')
+        $sql_query ="INSERT INTO `CustomMessage`(`sender_id`, `receiver_id`, `message`, `time`) VALUES (".$_GET['sid'].",".$_GET['rid'].",'".$_GET['message']."','".$_GET['date']." ".$_GET['time']."')";
+        $result = mysqli_query($link, $sql_query);
+        if($result==True){
+            $arr = array('success' => '1');
+            $resultJSON=json_encode($arr);
+            echo $resultJSON;
+        }else{
+            $arr = array('success' => '0');
+            $resultJSON=json_encode($arr);
+            echo $resultJSON;
+        }
         exit;
     }
     /////////////////////////////////////////
     
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
