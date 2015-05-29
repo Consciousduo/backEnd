@@ -42,17 +42,44 @@
         //exit program
         exit;
     }
-    //service ID=0//
+    /////////////////////////////////////////
     
     //service ID=1
     //sample url http://localhost:8888/q-cigarettes.php?service=1&id=0&date=2015-05-28&time=20:01:00
-    //return all message received before that date
+    //return all message for id=0 received before date=2015-05-28&time=20:01:00
     if($_GET['service']==1){
-        $date = new DateTime($_GET['date'].$_GET['time']);
-        echo $date->format('Y-m-d H:i:s');
+        $user = 'root';
+        $password = 'root';
+        $db = 'Q-cigarettes';
+        $host = 'localhost';
+        $port = 3306;
+        
+        $link = mysqli_init();
+        $success = mysqli_real_connect(
+                                       $link,
+                                       $host,
+                                       $user,
+                                       $password,
+                                       $db,
+                                       $port
+                                       );
+
+        $sql_query ="SELECT `sender_id`, `message`, `time` FROM `CustomMessage` WHERE receiver_id=".$_GET['id']." and time>'".$_GET['date']." ".$_GET['time']."'";
+        $result = mysqli_query($link, $sql_query);
+        
+        $row = $result->fetch_assoc();
+        $arr = array($row['sender_id'], $row['message'], $row['time']);
+        while ($row = $result->fetch_assoc()) {
+            array_push($arr, $row['sender_id'], $row['message'], $row['time']);
+        }
+        
+        //$date = new DateTime($_GET['date'].$_GET['time']);
+        //echo $date->format('Y-m-d H:i:s');
+        $resultJSON=json_encode($arr);
+        echo $resultJSON;
         exit;
     }
-    //service ID=1//
+    /////////////////////////////////////////
     
     //service ID=2
     if($_GET['service']==2){
@@ -60,7 +87,7 @@
         echo "222";
         exit;
     }
-    //service ID=2//
+    /////////////////////////////////////////
     
 ?>
 
