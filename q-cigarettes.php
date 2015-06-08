@@ -118,17 +118,35 @@
     //service ID=4
     //add new user
     //input email password phone first last age date time
+    //everything need to be checked before using this service as a tool to put everything into the table
     //output success or fail
     //SELECT `id` FROM `Registration` order by ID desc limit 1
     /*INSERT INTO `Registration`(`id`, `password`, `email`, `phone`, `first`, `last`, `age`, `modify`, `created`) VALUES (5, '12345', '123@usc.edu', '765-775-6412', 'duo', 'zhao', 20, '2015-06-06 20:20:20','2015-06-06 20:20:20')*/
 
     
     if($_POST['service']==4){
+        
+        
         $sql_query = "SELECT `id` FROM `Registration` order by id desc limit 1";
         $result = mysqli_query($link, $sql_query);
         $row = $result->fetch_assoc();
-        echo $row['id'];
+        $user_id = (intval($row['id'])+1);
+        
+        $sql_query = "INSERT INTO `Registration`(`id`, `password`, `email`, `phone`, `first`, `last`, `age`, `modify`, `created`) VALUES (".$user_id.",'".$_POST['password']."','".$_POST['email']."','".$_POST['phone']."','".$_POST['first']."','".$_POST['last']."',".$_POST['age'].",'".$_POST['date_time']."','".$_POST['date_time']."')";
+        $result = mysqli_query($link, $sql_query);
+        if($result==TRUE){
+            $arr = array('success' => '1');
+            $resultJSON=json_encode($arr);
+            echo $resultJSON;
+        }else{
+            $arr = array('success' => '0');
+            $resultJSON=json_encode($arr);
+            echo $resultJSON;
+        }
+
+
         exit;
+        
     }
     
     
